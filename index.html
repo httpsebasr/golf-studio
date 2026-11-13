@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Golf Studio — plantillas para tus videos de golf</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a1811">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a1811;--card:#10241a;--line:#244331;--gold:#d4af37;--txt:#eef4ef;--mut:#9db6a6;--red:#c9473f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.45 Inter,system-ui,sans-serif;padding-bottom:48px}
+.top{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:linear-gradient(135deg,#123323,#0a1811);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.brand{display:flex;gap:10px;align-items:center}
+.brand .logo{width:38px;height:38px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#d9d9d9 45%,#9a9a9a);box-shadow:0 0 0 2px var(--gold)}
+.brand b{font-family:"Playfair Display",serif;font-size:21px;color:var(--gold);letter-spacing:.5px}
+.brand small{display:block;color:var(--mut);font-size:12px}
+.tabs{display:flex;gap:6px;padding:10px 12px;position:sticky;top:63px;background:var(--bg);z-index:4;max-width:820px;margin:0 auto}
+.tabs button{flex:1;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--mut);font:600 14px Inter,sans-serif}
+.tabs button.on{background:var(--gold);color:#13140f;border-color:var(--gold)}
+main{padding:0 12px;max-width:820px;margin:0 auto}
+.tab{display:none}.tab.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}
+h2,h3{margin:0 0 8px;font-family:"Playfair Display",serif;font-weight:800}
+h2{font-size:20px}h3{font-size:17px}
+.muted{color:var(--mut);font-size:13px;margin:4px 0 10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.btn{appearance:none;border:1px solid var(--line);background:#16301f;color:var(--txt);padding:10px 14px;border-radius:12px;font:600 14px Inter,sans-serif;cursor:pointer}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:#16150e}
+.btn.red{background:var(--red);border-color:var(--red)}
+.btn.sm{padding:7px 10px;font-size:13px}
+.btn:disabled{opacity:.45}
+.file{position:relative;overflow:hidden;display:inline-block}
+.file input{position:absolute;inset:0;opacity:0}
+input,select{background:#0a1811;color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:9px 10px;font:inherit;width:100%;min-width:0}
+input[type=color]{padding:2px;height:38px;width:44px;flex:none}
+input[type=radio],input[type=checkbox]{width:auto;accent-color:var(--gold)}
+label{display:block;font-size:12px;color:var(--mut)}
+label>input,label>select{margin-top:4px;font-size:15px}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:13px;margin-top:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.status{font-size:13px;color:var(--mut);margin:8px 0;white-space:pre-line}
+.status.err{color:#ffb4a8}
+.list{display:flex;flex-direction:column;gap:6px;max-height:420px;overflow:auto}
+.item{text-align:left;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#0d1f16;color:var(--txt);font:inherit}
+.item small{display:block;color:var(--mut)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:12px 0 2px}
+.chip{flex:none;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--txt);font:700 15px Inter,sans-serif}
+.chip.on{background:var(--gold);color:#16150e;border-color:var(--gold)}
+.tee,.hz,.clip,.shot{display:flex;gap:6px;align-items:center;margin:6px 0}
+.tee input[data-k=name]{flex:1.4}.tee input[data-k=yards]{flex:1}
+.hz select,.hz input{flex:1}
+.clip{background:#0d1f16;border:1px solid var(--line);border-radius:12px;padding:8px}
+.clip .nm{flex:1;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.clip select{width:110px;flex:none}
+.shot{font-size:13px;justify-content:space-between;border-bottom:1px dashed var(--line);padding-bottom:6px}
+.shot input{width:76px;flex:none}
+.seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:8px 0}
+.seg button{flex:1;padding:9px 6px;background:transparent;border:0;color:var(--mut);font:600 13px Inter,sans-serif}
+.seg button.on{background:var(--gold);color:#16150e}
+#stage{display:block;margin:0 auto;max-width:100%;max-height:72vh;width:auto;height:auto;border-radius:12px;background:#000}
+#emap{display:block;width:100%;height:auto;border-radius:12px;touch-action:manipulation}
+#emap.marking{outline:2px solid var(--gold)}
+#recOut video{width:100%;max-height:60vh;border-radius:12px;margin-top:10px;background:#000}
+.hidden{display:none}
+.note{font-size:12px;color:var(--mut);margin-top:6px}
+.hzinfo{font-size:13px;margin:4px 0;color:var(--txt)}
+.hzinfo span{color:var(--mut)}
+.ok{color:#8fe27b;font-size:12px;font-weight:600}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><div class="logo"></div><div><b>Golf Studio</b><small id="courseName">Sin campo seleccionado</small></div></div>
+  <div style="text-align:right"><button id="btnInstall" class="btn sm gold hidden">📲 Instalar</button><small id="net" style="display:block;color:#ffb4a8;font-size:11px"></small></div>
+</header>
+<nav class="tabs">
+  <button data-tab="campo" class="on">1 · Campo</button>
+  <button data-tab="hoyos">2 · Hoyos</button>
+  <button data-tab="video">3 · Video</button>
+</nav>
+<main>
+<!-- CAMPO -->
+<section id="tab-campo" class="tab on">
+  <div class="card">
+    <h2>Buscar campo</h2>
+    <div id="idxInfo" class="muted"></div>
+    <div class="row">
+      <button id="btnNear" class="btn gold">📍 Cerca de mí</button>
+      <button id="btnIdx" class="btn sm">↻ Actualizar lista</button>
+    </div>
+    <input id="filter" placeholder="Busca por nombre o ciudad (ej. Chía, Lagartos, Briceño)…">
+    <div id="status" class="status"></div>
+    <div id="results" class="list"></div>
+  </div>
+  <div class="card">
+    <h2>Mis campos sin internet</h2>
+    <p class="muted">Cada campo que abres queda guardado en este dispositivo y funciona sin señal en la cancha. Tus cambios (par, ventaja, golpes) también se guardan.</p>
+    <div id="saved" class="list"></div>
+    <div class="row">
+      <button id="btnAll" class="btn">⬇ Descargar todos los de Colombia</button>
+      <button id="btnExport" class="btn sm">Exportar paquete</button>
+      <label class="btn sm file">Importar paquete<input type="file" id="impIn" accept=".json,application/json"></label>
+    </div>
+    <div id="bulkStatus" class="status"></div>
+  </div>
+  <div class="card">
+    <h2>Campo demo o a mano</h2>
+    <div class="row">
+      <button id="btnDemo" class="btn">Cargar campo demo</button>
+      <button id="btnManual" class="btn">Crear campo a mano</button>
+    </div>
+    <div id="manualForm" class="hidden">
+      <div class="row"><input id="mName" placeholder="Nombre del campo"></div>
+      <div class="row"><select id="mHoles"><option value="18">18 hoyos</option><option value="9">9 hoyos</option></select><button id="mCreate" class="btn gold">Crear</button></div>
+    </div>
+  </div>
+</section>
+<section id="tab-hoyos" class="tab">
+  <div id="holeChips" class="chips"></div>
+  <div id="holeEditor"></div>
+</section>
+<!-- VIDEO -->
+<section id="tab-video" class="tab">
+  <div class="card">
+    <h2>Plantilla</h2>
+    <div class="seg" id="segTpl"><button data-v="hole">1 hoyo</button><button data-v="nine">9 hoyos</button><button data-v="eighteen">18 hoyos</button></div>
+    <div class="seg" id="segFmt"><button data-v="v">Vertical 9:16</button><button data-v="h">Horizontal 16:9</button></div>
+    <label class="chk"><input type="checkbox" id="introOver"> <span>Intro encima del video en movimiento (si está apagado, el video espera a que termine la presentación del hoyo)</span></label>
+  </div>
+  <div class="card">
+    <h2>Tus videos</h2>
+    <p class="muted">Sube uno o varios tiros y asigna a qué hoyo pertenece cada uno. Se reproducen en orden.</p>
+    <label class="btn gold file">＋ Subir videos<input type="file" id="fileIn" accept="video/*" multiple></label>
+    <div id="clips" class="list" style="margin-top:8px"></div>
+  </div>
+  <div class="card">
+    <canvas id="stage" width="1080" height="1920"></canvas>
+    <div class="row">
+      <button id="btnPlay" class="btn gold">▶ Vista previa</button>
+      <button id="btnStop" class="btn">■ Detener</button>
+      <button id="btnRec" class="btn red">⏺ Exportar video</button>
+    </div>
+    <div id="recStatus" class="status"></div>
+    <div id="recOut"></div>
+  </div>
+</section>
+</main>
+
+<script>
+'use strict';
+/* ---------- utilidades ---------- */
+const $=s=>document.querySelector(s);
+const YD=1.09361, MY=0.9144, GOLD='#d4af37';
+const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+const eOut=t=>1-Math.pow(1-clamp(t),3);
+const eBack=t=>{t=clamp(t);const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2);};
+const dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const TEES={black:['Negras','#1b1b1b'],negro:['Negras','#1b1b1b'],negra:['Negras','#1b1b1b'],
+ blue:['Azules','#2f6fdf'],azul:['Azules','#2f6fdf'],white:['Blancas','#f4f4f4'],blanco:['Blancas','#f4f4f4'],blanca:['Blancas','#f4f4f4'],
+ yellow:['Amarillas','#f2c230'],amarillo:['Amarillas','#f2c230'],red:['Rojas','#d63a3a'],rojo:['Rojas','#d63a3a'],roja:['Rojas','#d63a3a'],
+ gold:['Doradas','#d4af37'],green:['Verdes','#2e9e50'],verde:['Verdes','#2e9e50'],silver:['Plateadas','#c8c8c8'],orange:['Naranjas','#ef8a2b']};
+const SIDE={L:'izquierda',C:'centro',R:'derecha'};
+
+/* ---------- estado ---------- */
+const S={course:null,hole:0,template:'hole',format:'v',introOver:false,clips:[],mark:false};
+let SAVE_T=null,LS={};
+function save(){try{localStorage.setItem('golfstudio1',JSON.stringify({key:S.course&&S.course.key,hole:S.hole,template:S.template,format:S.format,introOver:S.introOver}))}catch(e){}
+  clearTimeout(SAVE_T);SAVE_T=setTimeout(()=>{const c=S.course;if(c&&c.key)store.put(c).then(()=>{const i=COURSES.findIndex(x=>x.key===c.key);if(i>=0)COURSES[i]=c;}).catch(()=>{});},500);}
+function loadState(){try{LS=JSON.parse(localStorage.getItem('golfstudio1')||'null')||{};for(const k of['hole','template','format','introOver'])if(k in LS)S[k]=LS[k];}catch(e){LS={};}}
+const cur=()=>S.course?S.course.holes[S.hole]:null;
+
+/* ---------- geometría (metros, x=este, y=norte) ---------- */
+function plen(l){let s=0;for(let i=1;i<l.length;i++)s+=dist(l[i-1],l[i]);return s;}
+function along(l,d){
+  for(let i=1;i<l.length;i++){const a=l[i-1],b=l[i],sl=dist(a,b)||1e-9;
+    if(d<=sl||i===l.length-1){const t=d/sl;return{p:[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t],dir:[(b[0]-a[0])/sl,(b[1]-a[1])/sl]};}
+    d-=sl;}
+  return{p:l[0],dir:[0,1]};
+}
+function nearest(l,c){let best={d:Infinity,p:l[0],dir:[0,1]};
+  for(let i=1;i<l.length;i++){const a=l[i-1],b=l[i],vx=b[0]-a[0],vy=b[1]-a[1],L2=vx*vx+vy*vy||1e-9;
+    const t=clamp(((c[0]-a[0])*vx+(c[1]-a[1])*vy)/L2);const p=[a[0]+vx*t,a[1]+vy*t];const d=dist(p,c);
+    if(d<best.d){const L=Math.sqrt(L2);best={d,p,dir:[vx/L,vy/L]};}}
+  return best;}
+const centroid=pts=>{let x=0,y=0;for(const p of pts){x+=p[0];y+=p[1]}return[x/pts.length,y/pts.length]};
+function ell(c,dir,rx,ry,seed=0,n=22){const nr=[dir[1],-dir[0]],out=[];
+  for(let k=0;k<n;k++){const a=Math.PI*2*k/n,r=1+.09*Math.sin(3*a+seed)+.05*Math.sin(5*a+seed*2),lx=rx*Math.cos(a)*r,ly=ry*Math.sin(a)*r;
+    out.push([c[0]+nr[0]*lx+dir[0]*ly,c[1]+nr[1]*lx+dir[1]*ly]);}
+  return out;}
+const teePos=(h,i)=>(h.geo.teesPos&&h.geo.teesPos[i])||h.geo.line[0];
+const greenC=h=>h.geo.pin||(h.geo.green?centroid(h.geo.green):h.geo.line[h.geo.line.length-1]);
+const teeYd=h=>(h.tees[h.teeSel]||h.tees[0]||{}).yards||'';
+const teeName=h=>(h.tees[h.teeSel]||h.tees[0]||{}).name||'';
+
+/* forma generada a partir de par, yardas y trampas */
+const SHAPES={recto:[[1,0]],izq:[[.6,0],[.4,-30]],der:[[.6,0],[.4,30]],s:[[.42,0],[.3,24],[.28,-20]]};
+function genGeo(h){
+  const maxYd=Math.max(80,...h.tees.map(t=>+t.yards||0)),L=maxYd*MY;
+  let p=[0,0],ang=0;const line=[[0,0]];
+  for(const[f,a]of(SHAPES[h.shape]||SHAPES.recto)){ang+=a*Math.PI/180;p=[p[0]+Math.sin(ang)*f*L,p[1]+Math.cos(ang)*f*L];line.push(p);}
+  const g={line,fairway:[],green:null,bunkers:[],water:[],teesPos:[],pin:null};
+  if(h.par>3){const lft=[],rgt=[];for(let d=L*.3;d<=L-30;d+=8){const a=along(line,d),w=15+3.5*Math.sin(d/37+h.n),nr=[a.dir[1],-a.dir[0]];
+      lft.push([a.p[0]-nr[0]*w,a.p[1]-nr[1]*w]);rgt.push([a.p[0]+nr[0]*w,a.p[1]+nr[1]*w]);}
+    if(lft.length>1)g.fairway.push(lft.concat(rgt.reverse()));}
+  const end=along(line,L);g.green=ell(end.p,end.dir,15,19,h.n);
+  g.teesPos=h.tees.map(t=>along(line,(maxYd-(+t.yards||maxYd))*MY).p);
+  for(const hz of h.hazards||[]){const s=hz.side==='L'?-1:hz.side==='R'?1:0,water=hz.type==='agua',ry=water?(s?26:12):10;
+    const dc=Math.min((+hz.yd||0)*MY+ry,L+12),a=along(line,dc),nr=[a.dir[1],-a.dir[0]];
+    const off=s*(water?44:(dc>L-35?21:25)),c=[a.p[0]+nr[0]*off,a.p[1]+nr[1]*off];
+    (water?g.water:g.bunkers).push(ell(c,a.dir,water?(s?18:46):7,ry,+hz.yd||1));}
+  h.geo=g;
+}
+function hazardsOf(h,ti){
+  const T=teePos(h,ti),g=h.geo,out=[];
+  for(const[type,arr]of[['bunker',g.bunkers],['agua',g.water]])for(const poly of arr){
+    let near=Infinity,far=0;for(const p of poly){const d=dist(T,p);if(d<near)near=d;if(d>far)far=d;}
+    const c=centroid(poly),n=nearest(g.line,c);const cross=n.dir[0]*(c[1]-n.p[1])-n.dir[1]*(c[0]-n.p[0]);
+    const side=n.d<8?'C':cross>0?'L':'R';
+    out.push({type,poly,c,side,near:Math.round(near*YD),far:Math.round(far*YD)});}
+  return out.sort((a,b)=>a.near-b.near);
+}
+
+/* ---------- campos ---------- */
+function mkHole(n,par,hcp,back,shape,hz){
+  const dl=par===3?[0,15,30,45]:[0,25,50,85];
+  const tees=[['Negras','#1b1b1b'],['Azules','#2f6fdf'],['Blancas','#f4f4f4'],['Rojas','#d63a3a']].map(([name,color],i)=>({name,color,yards:back-dl[i]}));
+  const h={n,par,hcp,strokes:null,tees,teeSel:1,shape,hazards:hz,shots:[],auto:true};genGeo(h);return h;
+}
+function demoCourse(){
+  const pars=[4,5,3,4,4,3,5,4,4,4,3,5,4,4,3,4,5,4],hcps=[7,3,17,1,11,15,5,13,9,8,18,2,12,6,16,10,4,14];
+  const yds=[412,545,178,438,385,162,528,402,371,395,195,560,420,365,150,405,535,445];
+  const shapes=['der','s','recto','izq','recto','recto','s','der','izq','recto','recto','s','izq','der','recto','izq','s','der'];
+  let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+  const holes=pars.map((par,i)=>{const L=yds[i],hz=[];
+    if(par===3){hz.push({type:'bunker',side:rnd()<.5?'L':'R',yd:L-18});if(rnd()<.45)hz.push({type:'agua',side:'C',yd:Math.round(L*.42)});}
+    else{hz.push({type:'bunker',side:rnd()<.5?'L':'R',yd:Math.round(225+rnd()*40)});hz.push({type:'bunker',side:rnd()<.5?'L':'R',yd:L-22});
+      if(rnd()<.45)hz.push({type:'agua',side:rnd()<.5?'L':'R',yd:Math.round(L*.33)});if(par===5)hz.push({type:'bunker',side:'C',yd:Math.round(L*.66)});}
+    const h=mkHole(i+1,par,hcps[i],L,shapes[i],hz);
+    h.strokes=par+[0,1,-1,0,1,0,0,2,0][Math.floor(rnd()*9)];
+    // golpes de ejemplo
+    const line=h.geo.line,Lm=plen(line),off=(L-h.tees[h.teeSel].yards)*MY;
+    const ds=par===3?[Lm-4]:par===4?[off+238*MY,Lm-3]:[off+250*MY,off+455*MY,Lm-4];
+    h.shots=ds.map((d,k)=>{const a=along(line,Math.min(d,Lm-2)),nr=[a.dir[1],-a.dir[0]],lat=(rnd()-.5)*16*(k===ds.length-1?.4:1);return{x:a.p[0]+nr[0]*lat,y:a.p[1]+nr[1]*lat,t:''};});
+    return h;});
+  return{name:'Club Demo · Sabana',source:'demo',holes};
+}
+function manualCourse(name,n){
+  const holes=[];for(let i=0;i<n;i++){const h={n:i+1,par:4,hcp:i+1,strokes:null,teeSel:1,shape:'recto',hazards:[],shots:[],auto:true,
+    tees:[{name:'Azules',color:'#2f6fdf',yards:380},{name:'Blancas',color:'#f4f4f4',yards:355},{name:'Rojas',color:'#d63a3a',yards:310}]};genGeo(h);holes.push(h);}
+  return{name:name||'Mi campo',source:'manual',holes};
+}
+
+/* ---------- almacenamiento en el dispositivo (sin internet) ---------- */
+const DB={db:null,open(){if(this.db)return Promise.resolve(this.db);return new Promise((res,rej)=>{const r=indexedDB.open('golfstudio',1);
+  r.onupgradeneeded=()=>r.result.createObjectStore('courses',{keyPath:'key'});r.onsuccess=()=>{this.db=r.result;res(r.result);};r.onerror=()=>rej(r.error);});},
+  tx(mode,fn){return this.open().then(db=>new Promise((res,rej)=>{const t=db.transaction('courses',mode),q=fn(t.objectStore('courses'));t.oncomplete=()=>res(q&&q.result);t.onerror=()=>rej(t.error);}));}};
+const store={idb:false,mem:[],
+  async init(){try{if(!window.indexedDB)throw 0;await DB.open();this.idb=true;}catch(e){this.idb=false;try{this.mem=JSON.parse(localStorage.getItem('gs_courses')||'[]')}catch(e2){this.mem=[];}}},
+  async all(){return this.idb?(await DB.tx('readonly',s=>s.getAll()))||[]:this.mem.slice();},
+  async put(c){const v=JSON.parse(JSON.stringify(c));if(this.idb)return DB.tx('readwrite',s=>s.put(v));const i=this.mem.findIndex(x=>x.key===v.key);i>=0?this.mem[i]=v:this.mem.push(v);this._ls();},
+  async del(k){if(this.idb)return DB.tx('readwrite',s=>s.delete(k));this.mem=this.mem.filter(x=>x.key!==k);this._ls();},
+  _ls(){try{localStorage.setItem('gs_courses',JSON.stringify(this.mem))}catch(e){}}};
+let COURSES=[];
+async function reloadCourses(){try{COURSES=(await store.all()).sort((a,b)=>a.name.localeCompare(b.name));}catch(e){}renderSaved();showResults();}
+async function storePut(c){try{await store.put(c);}catch(e){}await reloadCourses();}
+
+/* ---------- OpenStreetMap / Overpass ---------- */
+const EPS=['https://overpass-api.de/api/interpreter','https://overpass.private.coffee/api/interpreter','https://maps.mail.ru/osm/tools/overpass/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
+const CO_BBOX='-4.3,-82,13.6,-66.8';
+// Pregunta a varios servidores (escalonados cada 3 s) y usa el primero que responda.
+function overpass(q,timeout=60000){return new Promise((resolve,reject)=>{
+  let done=false,fails=0,next=0,stagger=null;const ctrls=[];
+  const finish=(ok,v)=>{if(done)return;done=true;clearTimeout(stagger);clearTimeout(tm);ctrls.forEach(c=>{try{c.abort()}catch(e){}});ok?resolve(v):reject(v);};
+  const launch=()=>{if(done||next>=EPS.length)return;const ep=EPS[next++],c=new AbortController();ctrls.push(c);clearTimeout(stagger);stagger=setTimeout(launch,3000);
+    fetch(ep,{method:'POST',signal:c.signal,headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'data='+encodeURIComponent(q)})
+      .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}).then(j=>finish(true,j))
+      .catch(e=>{if(done)return;if(++fails>=EPS.length)finish(false,e);else launch();});};
+  const tm=setTimeout(()=>finish(false,new Error('timeout')),timeout);launch();});}
+const NET_MSG='No hay conexión con OpenStreetMap ahora mismo. Tus campos descargados siguen funcionando sin internet.\n(Si estás dentro de la vista de Claude: esa vista no permite internet ni GPS; abre la app desde su enlace en el navegador.)';
+function status(m,err){const el=$('#status');el.textContent=m||'';el.className='status'+(err?' err':'');}
+const norm=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+function isCO(lat,lon){ // descarta bordes de países vecinos que caen dentro del rectángulo
+  if(lat>12&&lon<-81)return true; // San Andrés
+  return !((lat>7.3&&lat<11&&lon>-72.35)||(lat>=11&&lon>-71.1)||(lat<0.8&&lat>-1.5&&lon<-77)||(lat<-2.3&&lon<-70)||(lat>7.2&&lon<-77.3));}
+let INDEX=null,MYPOS=null;
+function loadIndex(){try{INDEX=JSON.parse(localStorage.getItem('gs_index')||'null')}catch(e){INDEX=null}}
+function hav(a,b,c,d){const R=6371,r=Math.PI/180,x=Math.sin((c-a)*r/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin((d-b)*r/2)**2;return 2*R*Math.asin(Math.sqrt(x));}
+async function refreshIndex(silent){
+  if(!silent)status('Descargando la lista de campos de Colombia… (se hace una sola vez)');
+  try{const d=await overpass(`[out:json][timeout:90];nwr["leisure"="golf_course"](${CO_BBOX});out tags bb;`,100000);
+    const list=d.elements.map(e=>{const t=e.tags||{},b=e.bounds,lat=b?(b.minlat+b.maxlat)/2:e.lat,lon=b?(b.minlon+b.maxlon)/2:e.lon;if(lat==null)return null;
+      return{type:e.type,id:e.id,name:t.name||t['name:es']||'Campo sin nombre',city:t['addr:city']||t['is_in:city']||t['addr:municipality']||t['addr:state']||'',
+        lat:+lat.toFixed(5),lon:+lon.toFixed(5),holes:t.holes||t['golf:course:holes']||'',b:b?[b.minlat,b.minlon,b.maxlat,b.maxlon]:null};})
+      .filter(r=>r&&isCO(r.lat,r.lon));
+    INDEX={t:Date.now(),list};try{localStorage.setItem('gs_index',JSON.stringify(INDEX))}catch(e){}
+    showResults();if(!silent)status(list.length+' campos en la lista. Ahora la búsqueda es instantánea, incluso sin internet.');return true;
+  }catch(e){if(!silent)status(NET_MSG,true);return false;}}
+function updIdxInfo(){const el=$('#idxInfo');if(!el)return;
+  el.textContent=INDEX?`Lista de ${INDEX.list.length} campos de Colombia · actualizada el ${new Date(INDEX.t).toLocaleDateString('es-CO',{day:'numeric',month:'short',year:'numeric'})}. Buscar no usa internet.`
+    :'Aún no tienes la lista de campos. Se descarga una sola vez (pocos segundos) y después buscar es instantáneo.';}
+function showResults(){const box=$('#results');updIdxInfo();if(!INDEX){box.innerHTML='';return;}
+  const f=norm($('#filter').value.trim()),keys=new Set(COURSES.map(c=>c.key));
+  let list=INDEX.list.map((r,i)=>({r,i,km:MYPOS?hav(MYPOS[0],MYPOS[1],r.lat,r.lon):null}));
+  if(f)list=list.filter(({r})=>norm(r.name+' '+r.city).includes(f));
+  list.sort((a,b)=>a.km!=null?a.km-b.km:a.r.name.localeCompare(b.r.name));
+  box.innerHTML=list.slice(0,150).map(({r,i,km})=>`<button class="item" data-i="${i}"><b>${esc(r.name)}${keys.has('osm/'+r.type+'/'+r.id)?' <span class="ok">✓ sin internet</span>':''}</b><small>${esc(r.city)}${km!=null?(r.city?' · ':'')+km.toFixed(1)+' km':''}${r.holes?' · '+esc(r.holes)+' hoyos':''}</small></button>`).join('')||'<p class="muted">Sin resultados.</p>';}
+async function searchNear(){
+  if(!navigator.geolocation){status('Este navegador no da acceso al GPS.',true);return;}
+  status('Obteniendo tu ubicación…');
+  navigator.geolocation.getCurrentPosition(async p=>{MYPOS=[p.coords.latitude,p.coords.longitude];$('#filter').value='';
+      if(!INDEX&&!(await refreshIndex()))return;showResults();const n=INDEX.list.filter(r=>hav(MYPOS[0],MYPOS[1],r.lat,r.lon)<40).length;
+      status(n?n+' campos a menos de 40 km (ordenados por distancia).':'No hay campos a menos de 40 km; la lista está ordenada por distancia.');},
+    ()=>status('No se pudo leer el GPS (permiso negado o no disponible en esta vista).',true),{enableHighAccuracy:false,timeout:15000,maximumAge:300000});}
+async function fetchCourse(r){
+  let q;const b=r.b,P=.0025;
+  if(b){const bb=`${b[0]-P},${b[1]-P},${b[2]+P},${b[3]+P}`;q=`[out:json][timeout:90];(nwr["golf"](${bb});way["natural"="water"](${bb}););out geom tags;`;}
+  else q=`[out:json][timeout:90];(nwr["golf"](around:1300,${r.lat},${r.lon});way["natural"="water"](around:1300,${r.lat},${r.lon}););out geom tags;`;
+  const d=await overpass(q,90000);let c=parseOsm(d.elements,r);const mapped=!!c;
+  if(!c)c=manualCourse(r.name,parseInt(r.holes)===9?9:18);
+  Object.assign(c,{source:'osm',key:'osm/'+r.type+'/'+r.id,osm:{type:r.type,id:r.id},mapped,savedAt:Date.now(),city:r.city||''});return c;}
+async function loadOsm(r){
+  const saved=COURSES.find(c=>c.key==='osm/'+r.type+'/'+r.id);
+  if(saved){setCourse(saved);status('Abierto desde tus campos guardados (no usó internet).');return;}
+  status('Descargando "'+r.name+'"…');
+  try{const c=await fetchCourse(r);
+    status(c.mapped?'Listo: '+c.holes.length+' hoyos con su forma real. Quedó guardado para usarlo sin internet.'
+      :'"'+r.name+'" está en el mapa, pero sus hoyos todavía no están dibujados en OpenStreetMap. Lo guardé con hoyos genéricos para que pongas par, ventaja, yardas y trampas a mano.');
+    setCourse(c);}catch(e){status(NET_MSG,true);}}
+let BULK=null;
+async function downloadAll(){
+  if(BULK){BULK.stop=true;return;}
+  if(!INDEX&&!(await refreshIndex()))return;
+  const have=new Set(COURSES.map(c=>c.key)),todo=INDEX.list.filter(r=>!have.has('osm/'+r.type+'/'+r.id));
+  if(!todo.length){$('#bulkStatus').textContent='Ya tienes todos los campos de la lista guardados.';return;}
+  BULK={stop:false};$('#btnAll').textContent='■ Detener descarga';let ok=0,fail=0;
+  for(let i=0;i<todo.length&&!BULK.stop;i++){$('#bulkStatus').textContent=`Descargando ${i+1} de ${todo.length}: ${todo[i].name}…`;
+    try{await store.put(await fetchCourse(todo[i]));ok++;}catch(e){fail++;if(navigator.onLine===false)break;}
+    if(i%5===4)await reloadCourses();await new Promise(r=>setTimeout(r,1000));}
+  await reloadCourses();$('#bulkStatus').textContent=`${BULK.stop?'Detenido. ':''}${ok} campos guardados${fail?`, ${fail} fallaron (vuelve a intentar luego)`:''}.`;
+  BULK=null;$('#btnAll').textContent='⬇ Descargar todos los de Colombia';}
+function renderSaved(){const el=$('#saved');if(!el)return;
+  el.innerHTML=COURSES.map(c=>`<div class="clip" data-k="${esc(c.key)}"><span class="nm">⛳ <b>${esc(c.name)}</b><br><small class="muted">${c.holes.length} hoyos${c.city?' · '+esc(c.city):''}${c.source==='osm'?(c.mapped?' · forma real':' · sin forma (datos a mano)'):c.source==='demo'?' · demo':' · hecho a mano'}</small></span><button class="btn sm" data-a="open">Abrir</button><button class="btn sm" data-a="del">✕</button></div>`).join('')
+    ||'<p class="muted">Todavía no tienes campos guardados.</p>';}
+async function saveFile(name,data){
+  try{if(window.claude&&window.claude.use){const dl=await window.claude.use('downloads');if(dl){await dl.save({filename:name,data});return true;}}}
+  catch(e){if(e&&(e.code==='declined'||e.code==='rate_limited'))return false;}
+  const blob=data instanceof Blob?data:new Blob([data],{type:'application/octet-stream'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),1500);return true;}
+
+function parseOsm(els,r){
+  const lat0=r.lat,lon0=r.lon,k=Math.cos(lat0*Math.PI/180),toM=([la,lo])=>[(lo-lon0)*111320*k,(la-lat0)*110574];
+  const feats=[],raw=[];
+  for(const el of els){const t=el.tags||{};let pts=null;
+    if(el.type==='node')pts=[[el.lat,el.lon]];
+    else if(el.type==='way'&&el.geometry)pts=el.geometry.map(g=>[g.lat,g.lon]);
+    else if(el.type==='relation'){const m=(el.members||[]).find(m=>m.role==='outer'&&m.geometry);if(m)pts=m.geometry.map(g=>[g.lat,g.lon]);}
+    if(!pts||!pts.length)continue;pts=pts.map(toM);const g=t.golf;
+    if(g==='hole'&&el.type==='way'&&pts.length>1)raw.push({t,line:pts});
+    else if(['tee','green','fairway','bunker','pin'].includes(g))feats.push({k:g,pts,t});
+    else if(g==='water_hazard'||g==='lateral_water_hazard'||t.natural==='water')feats.push({k:'water',pts,t});}
+  const seen=new Set();
+  const hr=raw.map(h=>({...h,ref:parseInt(h.t.ref)||0})).sort((a,b)=>(a.ref||999)-(b.ref||999)).filter(h=>{if(!h.ref)return true;if(seen.has(h.ref))return false;seen.add(h.ref);return true;});
+  if(!hr.length)return null;
+  const holes=hr.map((x,i)=>({n:x.ref||i+1,par:parseInt(x.t.par)||0,hcp:parseInt(x.t.handicap||x.t.hcp)||'',strokes:null,tees:[],teeSel:0,shape:'recto',hazards:[],shots:[],auto:false,_t:x.t,
+    geo:{line:x.line,fairway:[],green:null,bunkers:[],water:[],teesPos:[],teePolys:[],pin:null,_tees:[]}}));
+  const lim={tee:90,green:60,pin:40,fairway:60,bunker:70,water:90};
+  for(const f of feats){const c=centroid(f.pts);let best=null,bd=Infinity;
+    for(const h of holes){const l=h.geo.line;let d;
+      if(f.k==='tee')d=dist(c,l[0]);else if(f.k==='green'||f.k==='pin')d=dist(c,l[l.length-1]);
+      else{d=Infinity;const pp=f.pts.length>60?f.pts.filter((_,i)=>i%3===0):f.pts;for(const p of pp){const nn=nearest(l,p).d;if(nn<d)d=nn;}}
+      if(d<bd){bd=d;best=h;}}
+    if(!best||bd>lim[f.k])continue;const g=best.geo,poly=f.pts.length>2?f.pts:null;
+    if(f.k==='tee')g._tees.push({c,poly,names:(f.t.tee||'').split(/[;,]/).map(s=>s.trim().toLowerCase()).filter(Boolean)});
+    else if(f.k==='green'){if(poly)g.green=poly;}
+    else if(f.k==='pin')g.pin=c;
+    else if(f.k==='fairway'){if(poly)g.fairway.push(poly);}
+    else if(f.k==='bunker')g.bunkers.push(poly||ell(c,[0,1],6,8,1));
+    else if(poly)g.water.push(poly);}
+  for(const h of holes){const g=h.geo,l=g.line,L=plen(l),d0=along(l,0).dir;
+    const ydFrom=c=>Math.round((L+((l[0][0]-c[0])*d0[0]+(l[0][1]-c[1])*d0[1]))*YD);
+    let tees=[];
+    for(const te of g._tees)for(const n of(te.names.length?te.names:[''])){const info=TEES[n];
+      const name=info?info[0]:(n?n[0].toUpperCase()+n.slice(1):'Tee '+(tees.length+1));if(tees.some(t=>t.name===name))continue;
+      tees.push({name,color:info?info[1]:'#ffffff',yards:ydFrom(te.c),pos:te.c,poly:te.poly});}
+    for(const[kk,v]of Object.entries(h._t)){const m=kk.match(/^dist:(.+)$/);if(!m)continue;const n=m[1].toLowerCase(),val=parseFloat(v);if(!val)continue;
+      const y=/y/i.test(v)?Math.round(val):Math.round(val*YD),info=TEES[n],name=info?info[0]:n,ex=tees.find(t=>t.name===name);
+      if(ex)ex.yards=y;else tees.push({name,color:info?info[1]:'#ffffff',yards:y,pos:l[0],poly:null});}
+    if(!tees.length)tees.push({name:'Salida',color:'#ffffff',yards:Math.round(L*YD),pos:l[0],poly:null});
+    tees.sort((a,b)=>b.yards-a.yards);
+    h.tees=tees.map(t=>({name:t.name,color:t.color,yards:t.yards}));g.teesPos=tees.map(t=>t.pos);g.teePolys=tees.map(t=>t.poly);delete g._tees;
+    if(!g.green){const e=along(l,L);g.green=ell(g.pin||e.p,e.dir,14,17,h.n);}
+    if(!h.par)h.par=L<230?3:L<430?4:5;
+    h.teeSel=Math.min(1,h.tees.length-1);delete h._t;}
+  return{name:r.name,source:'osm',ref:{lat0,lon0},holes};
+}
+function setCourse(c){if(!c.key)c.key=(c.source==='demo'?'demo':'manual/'+Date.now());S.course=c;S.hole=0;save();storePut(c);refreshHeader();renderHoles();renderClips();switchTab('hoyos');}
+function refreshHeader(){$('#courseName').textContent=S.course?S.course.name+' · '+S.course.holes.length+' hoyos':'Sin campo seleccionado';}
+
+/* ---------- dibujo en canvas ---------- */
+function rr(c,x,y,w,h,r){r=Math.min(r,w/2,h/2);c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();}
+function txt(c,s,x,y,o={}){c.save();c.globalAlpha*=(o.alpha??1);
+  c.font=`${o.weight||600} ${o.size||24}px ${o.pf?'"Playfair Display", Georgia, serif':'Inter, system-ui, sans-serif'}`;
+  c.fillStyle=o.color||'#fff';c.textAlign=o.align||'left';c.textBaseline=o.base||'alphabetic';
+  if(o.spacing&&'letterSpacing' in c)c.letterSpacing=o.spacing+'px';
+  if(o.shadow){c.shadowColor='rgba(0,0,0,.6)';c.shadowBlur=o.shadow;}
+  c.fillText(String(s),x,y);c.restore();}
+function pill(c,x,y,s,o={}){const z=o.size||20;c.save();c.font=`700 ${z}px Inter, system-ui, sans-serif`;
+  const w=c.measureText(s).width+z*1.1,h=z*1.6,px=o.align==='right'?x-w:o.align==='center'?x-w/2:x;
+  rr(c,px,y-h/2,w,h,h/2);c.fillStyle=o.bg||'rgba(5,15,10,.85)';c.fill();
+  if(o.stroke){c.strokeStyle=o.stroke;c.lineWidth=Math.max(1,z*.09);c.stroke();}
+  c.fillStyle=o.fg||'#fff';c.textBaseline='middle';c.textAlign='center';c.fillText(s,px+w/2,y+1);c.restore();return w;}
+function glass(c,x,y,w,h,r,a=1,u=1){c.save();c.globalAlpha*=a;rr(c,x,y,w,h,r);c.fillStyle='rgba(6,17,12,.74)';c.fill();
+  c.strokeStyle='rgba(212,175,55,.6)';c.lineWidth=2*u;c.stroke();c.restore();}
+
+function holeFrame(h,ti,bx,by,bw,bh,pad){
+  const g=h.geo,T=teePos(h,ti),G=greenC(h),th=Math.atan2(G[0]-T[0],G[1]-T[1]),co=Math.cos(th),sn=Math.sin(th);
+  const rot=p=>{const dx=p[0]-T[0],dy=p[1]-T[1];return[co*dx-sn*dy,sn*dx+co*dy];};
+  const all=[...g.line,...(g.green||[]),...g.fairway.flat(),...g.bunkers.flat(),...g.teesPos.filter(Boolean),...(h.shots||[]).map(s=>[s.x,s.y])];
+  let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity;
+  for(const p of all){const q=rot(p);x0=Math.min(x0,q[0]);x1=Math.max(x1,q[0]);y0=Math.min(y0,q[1]);y1=Math.max(y1,q[1]);}
+  x0-=14;x1+=14;y0-=14;y1+=16;let w=x1-x0;const hh=y1-y0,minW=hh*Math.min(.9,bw/bh*.75);
+  if(w<minW){const m=(x0+x1)/2;x0=m-minW/2;x1=m+minW/2;w=minW;}
+  const sc=Math.min((bw-2*pad)/w,(bh-2*pad)/hh),cx=(x0+x1)/2,cy=(y0+y1)/2;
+  const X=p=>{const q=rot(p);return[bx+bw/2+(q[0]-cx)*sc,by+bh/2-(q[1]-cy)*sc];};
+  const inv=(sx,sy)=>{const xr=(sx-bx-bw/2)/sc+cx,yr=-(sy-by-bh/2)/sc+cy;return[T[0]+co*xr+sn*yr,T[1]-sn*xr+co*yr];};
+  return{X,inv,sc};
+}
+function drawHole(c,h,bx,by,bw,bh,o={}){
+  const ti=o.tee??h.teeSel??0,u=o.u||1,pr=o.progress??1,fs=o.fs||20*u;
+  const F=holeFrame(h,ti,bx,by,bw,bh,o.pad??26*u),{X,sc}=F,g=h.geo,T=teePos(h,ti),G=greenC(h);
+  c.save();rr(c,bx,by,bw,bh,o.radius??18*u);c.clip();
+  if(o.bg!==false){const gr=c.createLinearGradient(bx,by,bx,by+bh);gr.addColorStop(0,'#1a4530');gr.addColorStop(1,'#0d2a1b');c.fillStyle=gr;c.fillRect(bx,by,bw,bh);}
+  const path=pts=>{c.beginPath();pts.forEach((p,i)=>{const q=X(p);i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]);});};
+  const poly=(pts,fill,stroke,lw)=>{if(!pts||pts.length<3)return;path(pts);c.closePath();c.fillStyle=fill;c.fill();if(stroke){c.strokeStyle=stroke;c.lineWidth=lw;c.stroke();}};
+  c.globalAlpha=eOut(pr*1.6);c.lineCap='round';c.lineJoin='round';
+  path(g.line);c.strokeStyle='rgba(70,135,80,.55)';c.lineWidth=Math.max(8*u,74*sc);c.stroke();
+  g.water.forEach(p=>poly(p,'#2a7fc6','rgba(170,220,255,.85)',2*u));
+  g.fairway.forEach(p=>poly(p,'#63b95d','rgba(200,245,180,.55)',1.5*u));
+  g.bunkers.forEach(p=>poly(p,'#eddcab','rgba(255,255,255,.75)',1.5*u));
+  poly(g.green,'#8fe27b','rgba(235,255,225,.95)',2*u);
+  // tees
+  g.teesPos.forEach((p,i)=>{if(!p)return;const q=X(p),s=Math.max(9*u,10*sc);c.save();rr(c,q[0]-s,q[1]-s*.6,s*2,s*1.2,s*.35);
+    c.fillStyle=(h.tees[i]||{}).color||'#fff';c.fill();c.lineWidth=(i===ti?3:1.2)*u;c.strokeStyle=i===ti?GOLD:'rgba(0,0,0,.6)';c.stroke();c.restore();});
+  // marcas de distancia al green
+  if(o.markers&&pr>.4){const Lm=plen(g.line);c.save();c.globalAlpha=eOut((pr-.4)/.4)*.85;
+    for(const m of[100,150,200,250]){const d=Lm-m*MY;if(d<40)continue;const a=along(g.line,d),nr=[a.dir[1],-a.dir[0]];
+      const p1=X([a.p[0]-nr[0]*16,a.p[1]-nr[1]*16]),p2=X([a.p[0]+nr[0]*16,a.p[1]+nr[1]*16]);
+      c.beginPath();c.moveTo(p1[0],p1[1]);c.lineTo(p2[0],p2[1]);c.strokeStyle='rgba(255,255,255,.8)';c.lineWidth=2*u;c.stroke();
+      txt(c,m,p2[0]+6*u,p2[1],{size:fs*.7,weight:700,color:'rgba(255,255,255,.9)',base:'middle'});}
+    c.restore();}
+  // línea central animada
+  c.globalAlpha=1;const cl=[T,...g.line.slice(1)],tot=plen(cl),lim=tot*clamp(pr);c.save();c.setLineDash([9*u,9*u]);c.strokeStyle='rgba(255,255,255,.75)';c.lineWidth=2.2*u;
+  c.beginPath();let acc=0;let q=X(cl[0]);c.moveTo(q[0],q[1]);
+  for(let i=1;i<cl.length&&acc<lim;i++){const sl=dist(cl[i-1],cl[i]),t=Math.min(1,(lim-acc)/sl);q=X([cl[i-1][0]+(cl[i][0]-cl[i-1][0])*t,cl[i-1][1]+(cl[i][1]-cl[i-1][1])*t]);c.lineTo(q[0],q[1]);acc+=sl;}
+  c.stroke();c.restore();
+  // bandera
+  if(pr>.85){const f=X(G),k=eBack((pr-.85)/.15),ph=34*u*k;c.save();c.strokeStyle='#fff';c.lineWidth=2.5*u;c.beginPath();c.moveTo(f[0],f[1]);c.lineTo(f[0],f[1]-ph);c.stroke();
+    c.beginPath();c.moveTo(f[0],f[1]-ph);c.lineTo(f[0]+18*u*k,f[1]-ph+7*u);c.lineTo(f[0],f[1]-ph+14*u);c.fillStyle='#e0433b';c.fill();
+    c.beginPath();c.arc(f[0],f[1],3*u,0,7);c.fillStyle='#111';c.fill();c.restore();}
+  // trampas con distancias
+  if(o.labels&&pr>.55){const A=eOut((pr-.55)/.35);c.save();c.globalAlpha=A;
+    for(const hz of hazardsOf(h,ti)){const p=X(hz.c);if(p[0]<bx||p[0]>bx+bw||p[1]<by||p[1]>by+bh)continue;const left=p[0]>bx+bw/2;
+      const label=o.compact?hz.near+'':hz.near+' › '+hz.far;
+      pill(c,left?p[0]-14*u:p[0]+14*u,p[1],label,{size:fs*.8,align:left?'right':'left',bg:hz.type==='agua'?'rgba(18,70,120,.92)':'rgba(70,55,20,.92)',stroke:'rgba(255,255,255,.35)'});}
+    c.restore();}
+  // golpes
+  if(o.shots&&h.shots&&h.shots.length){const n=Math.min(h.shots.length,o.shotN??99),pts=[T,...h.shots.slice(0,n).map(s=>[s.x,s.y])];
+    c.save();for(let i=1;i<pts.length;i++){const a=X(pts[i-1]),b=X(pts[i]),mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy)||1;
+      const cxp=mx-dy/L*L*.12,cyp=my+dx/L*L*.12;c.beginPath();c.moveTo(a[0],a[1]);c.quadraticCurveTo(cxp,cyp,b[0],b[1]);
+      c.strokeStyle=GOLD;c.lineWidth=4*u;c.shadowColor='rgba(0,0,0,.5)';c.shadowBlur=6*u;c.stroke();c.shadowBlur=0;
+      c.beginPath();c.arc(b[0],b[1],7*u,0,7);c.fillStyle='#fff';c.fill();c.lineWidth=2*u;c.strokeStyle=GOLD;c.stroke();
+      if(o.shotLabels){const yds=Math.round(dist(pts[i-1],pts[i])*YD);pill(c,b[0]+12*u,b[1]-14*u,i+' · '+yds,{size:fs*.75,bg:'rgba(212,175,55,.95)',fg:'#16150e'});}}
+    c.restore();}
+  c.restore();return F;
+}
+
+/* ---------- plantillas ---------- */
+const INTRO_A=3.4,INTRO_B=5.4,INTRO_T=INTRO_A+INTRO_B;
+function shotsShown(h,vt,vdur){const n=(h.shots||[]).length;let k=0;
+  (h.shots||[]).forEach((s,i)=>{const at=(s.t!==''&&s.t!=null&&!isNaN(+s.t))?+s.t:(i+1)/(n+1)*vdur;if(vt>=at)k=i+1;});return k;}
+function introCard(c,W,H,h,t,u,V){
+  const A=Math.min(eOut(t/.5),1-eOut((t-(INTRO_A-.45))/.45)),cx=W/2,cy=H*(V?.45:.43);
+  c.save();c.globalAlpha=A;c.fillStyle='rgba(4,14,10,.8)';c.fillRect(0,0,W,H);
+  const rg=c.createRadialGradient(cx,cy,50*u,cx,cy,Math.max(W,H)*.7);rg.addColorStop(0,'rgba(30,80,50,.35)');rg.addColorStop(1,'rgba(0,0,0,.4)');c.fillStyle=rg;c.fillRect(0,0,W,H);c.restore();
+  txt(c,(S.course?.name||'').toUpperCase(),cx,cy-(V?380:330)*u,{size:28*u,weight:600,color:GOLD,align:'center',alpha:A*eOut((t-.15)/.5),spacing:6*u});
+  const lw=eOut((t-.2)/.7)*(V?640:760)*u;c.save();c.globalAlpha=A;c.fillStyle=GOLD;
+  c.fillRect(cx-lw/2,cy-(V?330:285)*u,lw,2*u);c.fillRect(cx-lw/2,cy+(V?190:165)*u,lw,2*u);c.restore();
+  txt(c,'HOYO',cx,cy-(V?250:215)*u,{size:34*u,weight:700,color:'#fff',align:'center',alpha:A*eOut((t-.3)/.4),spacing:18*u});
+  const k=eBack((t-.35)/.7);c.save();c.translate(cx,cy-20*u);c.scale(.55+.45*k,.55+.45*k);
+  txt(c,h.n,0,0,{size:(V?330:300)*u,pf:true,weight:800,align:'center',base:'middle',alpha:A*clamp((t-.35)/.3),shadow:30*u});c.restore();
+  const items=[['PAR',h.par],['VENTAJA',h.hcp||'–'],['YARDAS',teeYd(h)||'–']],bw=(V?270:290)*u,gap=28*u,x0=cx-(3*bw+2*gap)/2,y=cy+(V?240:210)*u;
+  items.forEach(([l,v],i)=>{const tt=eOut((t-.95-i*.18)/.5),yy=y+(1-tt)*50*u,x=x0+i*(bw+gap);glass(c,x,yy,bw,150*u,18*u,A*tt,u);
+    txt(c,v,x+bw/2,yy+72*u,{size:72*u,pf:true,weight:800,align:'center',base:'middle',alpha:A*tt});
+    txt(c,l,x+bw/2,yy+128*u,{size:21*u,weight:700,color:GOLD,align:'center',alpha:A*tt,spacing:4*u});});
+  if(teeName(h))txt(c,'desde tees '+teeName(h).toLowerCase(),cx,y+(V?205:195)*u,{size:24*u,weight:400,color:'rgba(255,255,255,.75)',align:'center',alpha:A*eOut((t-1.6)/.5)});
+}
+function mapCard(c,W,H,h,t,u,V){
+  const A=Math.min(eOut(t/.5),1-eOut((t-(INTRO_B-.45))/.45));
+  c.save();c.globalAlpha=A*.6;c.fillStyle='#04100a';c.fillRect(0,0,W,H);c.restore();
+  const px=V?44*u:60*u,py=V?110*u:44*u,pw=W-2*px,ph=H-py-(V?110:44)*u;
+  c.save();c.globalAlpha=A;glass(c,px,py,pw,ph,28*u,1,u);
+  txt(c,'HOYO '+h.n,px+38*u,py+82*u,{size:62*u,pf:true,weight:800});
+  txt(c,'PAR '+h.par+'   ·   VENTAJA '+(h.hcp||'–'),px+pw-38*u,py+76*u,{size:28*u,weight:700,color:GOLD,align:'right',spacing:2*u});
+  c.fillStyle='rgba(212,175,55,.6)';c.fillRect(px+38*u,py+110*u,pw-76*u,2*u);
+  const mb=V?{x:px+30*u,y:py+135*u,w:pw-60*u,h:ph-135*u-320*u}:{x:px+30*u,y:py+132*u,w:pw*.56,h:ph-162*u};
+  drawHole(c,h,mb.x,mb.y,mb.w,mb.h,{u,progress:clamp((t-.3)/2.3),labels:true,markers:true,fs:24*u,compact:false});
+  const hz=hazardsOf(h,h.teeSel).slice(0,4);
+  const lx=V?px+40*u:mb.x+mb.w+44*u,ly=V?mb.y+mb.h+56*u:mb.y+30*u,colW=V?(pw-80*u)/2:pw-mb.w-110*u;
+  const hx=V?lx+colW+20*u:lx,hy=V?ly:ly+60*u+h.tees.length*54*u+40*u;
+  txt(c,'SALIDAS',lx,ly,{size:20*u,weight:700,color:GOLD,spacing:4*u,alpha:eOut((t-1)/.5)});
+  h.tees.slice(0,5).forEach((te,i)=>{const a=eOut((t-1.1-i*.12)/.4),yy=ly+46*u+i*52*u;c.save();c.globalAlpha=A*a;
+    c.beginPath();c.arc(lx+12*u,yy-9*u,12*u,0,7);c.fillStyle=te.color;c.fill();c.lineWidth=(i===h.teeSel?3:1)*u;c.strokeStyle=i===h.teeSel?GOLD:'rgba(255,255,255,.4)';c.stroke();c.restore();
+    txt(c,te.name,lx+36*u,yy,{size:26*u,weight:600,alpha:a});txt(c,te.yards+' yd',lx+colW-10*u,yy,{size:26*u,weight:800,align:'right',alpha:a});});
+  txt(c,'TRAMPAS · desde '+teeName(h).toLowerCase(),hx,hy,{size:20*u,weight:700,color:GOLD,spacing:3*u,alpha:eOut((t-1.4)/.5)});
+  if(!hz.length)txt(c,'Sin trampas registradas',hx,hy+46*u,{size:24*u,weight:400,color:'rgba(255,255,255,.7)',alpha:eOut((t-1.6)/.5)});
+  hz.forEach((z,i)=>{const a=eOut((t-1.6-i*.15)/.4),yy=hy+46*u+i*52*u;c.save();c.globalAlpha=A*a;
+    c.beginPath();c.arc(hx+12*u,yy-9*u,11*u,0,7);c.fillStyle=z.type==='agua'?'#2a7fc6':'#eddcab';c.fill();c.restore();
+    txt(c,(z.type==='agua'?'Agua ':'Bunker ')+SIDE[z.side],hx+34*u,yy,{size:24*u,weight:600,alpha:a});
+    txt(c,z.near+' › '+z.far,hx+colW-10*u,yy,{size:24*u,weight:800,align:'right',alpha:a});});
+  c.restore();
+}
+function badge(c,W,H,h,u,A,V){
+  const x=36*u,y=H-(V?250:160)*u,w=(V?600:620)*u,hh=128*u;glass(c,x,y,w,hh,hh/2,A,u);
+  c.save();c.globalAlpha=A;c.beginPath();c.arc(x+hh/2,y+hh/2,hh/2-12*u,0,7);c.fillStyle=GOLD;c.fill();c.restore();
+  txt(c,h.n,x+hh/2,y+hh/2+3*u,{size:58*u,pf:true,weight:800,color:'#16150e',align:'center',base:'middle',alpha:A});
+  txt(c,'PAR '+h.par+'  ·  VENTAJA '+(h.hcp||'–'),x+hh+18*u,y+56*u,{size:30*u,weight:800,alpha:A});
+  txt(c,(teeYd(h)||'–')+' YD  ·  TEES '+teeName(h).toUpperCase(),x+hh+18*u,y+96*u,{size:22*u,weight:600,color:GOLD,alpha:A,spacing:2*u});
+}
+function ovHole(c,W,H,h,t,vt,vdur){
+  const u=Math.min(W,H)/1080,V=H>W;
+  if(t<INTRO_A)introCard(c,W,H,h,t,u,V);else if(t<INTRO_T)mapCard(c,W,H,h,t-INTRO_A,u,V);
+  const ta=t-INTRO_T;if(ta>0){const A=eOut(ta/.6);badge(c,W,H,h,u,A,V);
+    const mw=(V?300:280)*u,mh=(V?470:420)*u,mx=W-mw-36*u,my=(V?110:40)*u;glass(c,mx-6*u,my-6*u,mw+12*u,mh+12*u,22*u,A,u);
+    c.save();c.globalAlpha=A;drawHole(c,h,mx,my,mw,mh,{u,shots:true,shotN:shotsShown(h,vt,vdur),labels:true,compact:true,fs:20*u,pad:16*u});c.restore();}
+}
+function scorecard(c,x,y,w,course,ch,blocks,u,A,showCur,rowH){
+  const hdr=58*u,label=150*u,totW=120*u;
+  glass(c,x,y,w,hdr+blocks.length*4*rowH+(blocks.length-1)*14*u+22*u,22*u,A,u);c.save();c.globalAlpha=A;
+  const visible=hh=>hh.strokes&&(hh.n<ch.n||(hh===ch&&showCur));
+  const all=blocks.flat().filter(visible),tot=all.reduce((s,hh)=>s+(+hh.strokes),0),par=all.reduce((s,hh)=>s+hh.par,0),dif=tot-par;
+  txt(c,course.name,x+24*u,y+40*u,{size:28*u,pf:true,weight:800});
+  if(all.length)txt(c,'TOTAL '+tot+'  ('+(dif===0?'E':dif>0?'+'+dif:dif)+')',x+w-24*u,y+40*u,{size:26*u,weight:800,color:GOLD,align:'right'});
+  blocks.forEach((b,bi)=>{const by=y+hdr+bi*(4*rowH+14*u),cw=(w-48*u-label-totW)/9,x0=x+24*u;
+    const rows=['HOYO','PAR','VENTAJA','GOLPES'];
+    rows.forEach((r,ri)=>{const yy=by+ri*rowH;c.fillStyle=ri===0?'rgba(212,175,55,.92)':ri%2?'rgba(255,255,255,.05)':'rgba(255,255,255,.1)';c.fillRect(x0,yy,w-48*u,rowH-2*u);
+      txt(c,r,x0+12*u,yy+rowH/2,{size:18*u,weight:800,color:ri===0?'#16150e':GOLD,base:'middle',spacing:1.5*u});});
+    b.forEach((hh,i)=>{const cx=x0+label+cw*i+cw/2;
+      const vals=[hh.n,hh.par,hh.hcp||'–'];vals.forEach((v,ri)=>txt(c,v,cx,by+ri*rowH+rowH/2+1*u,{size:(ri===0?24:22)*u,weight:ri===0?800:600,color:ri===0?'#16150e':'#fff',align:'center',base:'middle'}));
+      const gy=by+3*rowH+rowH/2;
+      if(visible(hh)){const d=hh.strokes-hh.par,r=rowH*.36;txt(c,hh.strokes,cx,gy+1*u,{size:26*u,weight:800,align:'center',base:'middle',color:d<0?'#ffd56b':'#fff'});
+        c.save();c.strokeStyle=d<0?'#ffd56b':'rgba(255,255,255,.85)';c.lineWidth=2*u;
+        const shape=(k)=>{c.beginPath();if(d<0)c.arc(cx,gy,r+k,0,7);else c.rect(cx-r-k,gy-r-k,2*(r+k),2*(r+k));c.stroke();};
+        if(d!==0){shape(0);if(Math.abs(d)>=2)shape(5*u);}c.restore();}
+      if(hh===ch){const pulse=.6+.4*Math.sin(performance.now()/260);c.save();c.strokeStyle=`rgba(212,175,55,${pulse})`;c.lineWidth=3*u;rr(c,cx-cw/2+2*u,by+2*u,cw-4*u,4*rowH-6*u,10*u);c.stroke();c.restore();}});
+    const tx=x0+label+cw*9+totW/2,lbl=blocks.length>1?(bi?'VUELTA':'IDA'):(b[0].n>9?'VUELTA':'IDA');
+    txt(c,lbl,tx,by+rowH/2,{size:18*u,weight:800,color:'#16150e',align:'center',base:'middle'});
+    txt(c,b.reduce((s,hh)=>s+hh.par,0),tx,by+rowH*1.5,{size:22*u,weight:800,align:'center',base:'middle'});
+    const vs=b.filter(visible);if(vs.length)txt(c,vs.reduce((s,hh)=>s+(+hh.strokes),0),tx,by+rowH*3.5,{size:24*u,weight:800,color:GOLD,align:'center',base:'middle'});});
+  c.restore();
+}
+function ovRound(c,W,H,h,t,vt,vdur,eighteen){
+  const u=Math.min(W,H)/1080,V=H>W,A=eOut(t/.6),hs=S.course.holes,idx=hs.indexOf(h);
+  let blocks;if(eighteen){blocks=[hs.slice(0,9)];if(hs.length>9)blocks.push(hs.slice(9,18));}else{const s=Math.floor(Math.max(0,idx)/9)*9;blocks=[hs.slice(s,s+9)];}
+  const rowH=(eighteen?(V?50:44):(V?62:54))*u,cardH=58*u+blocks.length*4*rowH+(blocks.length-1)*14*u+22*u;
+  const sw=V?W-72*u:W-80*u,sx=(W-sw)/2,sy=H-cardH-(V?70:28)*u;
+  const showCur=vt>=vdur*.88;
+  scorecard(c,sx,sy,sw,S.course,h,blocks,u,A,showCur,rowH);
+  const top=V?110*u:36*u,pw=V?(W-72*u-24*u)/2:W*.25,phh=Math.min(V?H*.42:H*.62,sy-top-24*u);
+  const Lx=V?36*u:36*u,Rx=V?Lx+pw+24*u:W-36*u-pw;
+  // panel izquierdo: yardaje por tiro + seguimiento
+  glass(c,Lx,top,pw,phh,24*u,A,u);c.save();c.globalAlpha=A;
+  txt(c,'HOYO '+h.n,Lx+24*u,top+60*u,{size:46*u,pf:true,weight:800});
+  txt(c,'PAR '+h.par+' · '+(teeYd(h)||'–')+' YD',Lx+pw-22*u,top+56*u,{size:20*u,weight:700,color:GOLD,align:'right'});
+  const n=shotsShown(h,vt,vdur),pts=[teePos(h,h.teeSel),...h.shots.map(s=>[s.x,s.y])],G=greenC(h);
+  const rows=Math.min(h.shots.length,5),rh=44*u;let ry=top+100*u;
+  if(!h.shots.length)txt(c,'Marca tus golpes en "Hoyos"',Lx+24*u,ry+20*u,{size:20*u,weight:400,color:'rgba(255,255,255,.7)'});
+  for(let i=0;i<rows;i++){const on=i<n,a=on?1:.28,yy=ry+i*rh+rh/2;
+    c.save();c.globalAlpha=A*a;c.beginPath();c.arc(Lx+40*u,yy,15*u,0,7);c.fillStyle=on?GOLD:'rgba(255,255,255,.25)';c.fill();c.restore();
+    txt(c,i+1,Lx+40*u,yy+1*u,{size:17*u,weight:800,color:'#16150e',align:'center',base:'middle',alpha:a});
+    const sd=Math.round(dist(pts[i],pts[i+1])*YD),rem=Math.round(dist(pts[i+1],G)*YD);
+    txt(c,on?sd+' yd':'—',Lx+66*u,yy+1*u,{size:24*u,weight:800,base:'middle',alpha:a});
+    txt(c,on?(rem<=8?'en green':'quedan '+rem):'',Lx+pw-22*u,yy+1*u,{size:19*u,weight:600,color:'rgba(255,255,255,.75)',align:'right',base:'middle',alpha:a});}
+  const my=ry+Math.max(1,rows)*rh+14*u;c.restore();
+  if(top+phh-my-18*u>80*u){c.save();c.globalAlpha=A;drawHole(c,h,Lx+16*u,my,pw-32*u,top+phh-my-16*u,{u,shots:true,shotN:n,labels:false,fs:18*u,pad:14*u,radius:14*u});c.restore();}
+  // panel derecho: forma del hoyo
+  glass(c,Rx,top,pw,phh,24*u,A,u);c.save();c.globalAlpha=A;
+  txt(c,'FORMA DEL HOYO',Rx+24*u,top+46*u,{size:18*u,weight:800,color:GOLD,spacing:3*u});
+  txt(c,'V '+(h.hcp||'–'),Rx+pw-22*u,top+46*u,{size:18*u,weight:800,color:'#fff',align:'right'});
+  const legendH=46*u;drawHole(c,h,Rx+16*u,top+66*u,pw-32*u,phh-66*u-legendH-14*u,{u,progress:clamp(t/2.2),labels:true,compact:true,markers:true,fs:18*u,pad:14*u,radius:14*u});
+  let lx=Rx+18*u;const ly=top+phh-legendH/2-8*u;
+  h.tees.slice(0,4).forEach(te=>{c.beginPath();c.arc(lx+9*u,ly,8*u,0,7);c.fillStyle=te.color;c.fill();c.strokeStyle='rgba(255,255,255,.4)';c.lineWidth=1*u;c.stroke();
+    txt(c,te.yards,lx+22*u,ly+1*u,{size:18*u,weight:700,base:'middle'});lx+=(pw-36*u)/Math.min(4,h.tees.length);});
+  c.restore();
+  // banner inicial
+  if(t<2.4){const a=Math.min(eOut(t/.4),1-eOut((t-1.9)/.5)),bw=(V?640:700)*u,bh=120*u,bx=(W-bw)/2,by2=V?H*.5-bh/2:H*.42;
+    glass(c,bx,by2,bw,bh,bh/2,a,u);txt(c,'HOYO '+h.n+'  ·  PAR '+h.par+'  ·  '+(teeYd(h)||'–')+' YD',W/2,by2+bh/2+2*u,{size:36*u,weight:800,align:'center',base:'middle',alpha:a});}
+}
+function bgPlaceholder(c,W,H,t){
+  const hz=H*.5,sky=c.createLinearGradient(0,0,0,hz);sky.addColorStop(0,'#6fa9de');sky.addColorStop(1,'#d3e8f4');c.fillStyle=sky;c.fillRect(0,0,W,hz);
+  c.fillStyle='#4f7f52';c.beginPath();c.moveTo(0,hz);for(let x=0;x<=W;x+=40)c.lineTo(x,hz-30-25*Math.sin(x/170)-15*Math.sin(x/61));c.lineTo(W,hz);c.fill();
+  const gr=c.createLinearGradient(0,hz,0,H);gr.addColorStop(0,'#4d9a49');gr.addColorStop(1,'#1f5a24');c.fillStyle=gr;c.fillRect(0,hz,W,H-hz);
+  for(let i=0;i<9;i++){c.fillStyle=i%2?'rgba(255,255,255,.05)':'rgba(0,0,0,.05)';c.beginPath();const a=W/2+(i-4.5)*W*.03,b=W/2+(i-3.5)*W*.03;
+    c.moveTo(a,hz);c.lineTo(b,hz);c.lineTo(W/2+(i-3.5)*W*.35,H);c.lineTo(W/2+(i-4.5)*W*.35,H);c.fill();}
+  const fx=W*.55,fy=hz+8;c.strokeStyle='#fff';c.lineWidth=3;c.beginPath();c.moveTo(fx,fy);c.lineTo(fx,fy-60);c.stroke();
+  c.fillStyle='#e0433b';c.beginPath();c.moveTo(fx,fy-60);c.lineTo(fx+30+3*Math.sin(t*4),fy-50);c.lineTo(fx,fy-40);c.fill();
+  txt(c,'Vista previa sin video',W/2,H-40,{size:24,weight:600,color:'rgba(255,255,255,.55)',align:'center'});
+}
+
+/* ---------- motor de reproducción / exportación ---------- */
+const cv=$('#stage'),cx=cv.getContext('2d');
+const vid=document.createElement('video');vid.playsInline=true;vid.setAttribute('playsinline','');vid.preload='auto';
+const P={on:false,rec:null,i:0,t0:0,started:false,loading:false,chunks:[]};
+let AC=null,AD=null;
+function ensureAudio(){if(AC){AC.resume&&AC.resume();return;}try{AC=new(window.AudioContext||window.webkitAudioContext)();const src=AC.createMediaElementSource(vid);
+  AD=AC.createMediaStreamDestination();src.connect(AD);src.connect(AC.destination);}catch(e){AC=null;AD=null;}}
+function sizeCanvas(){const[w,h]=S.format==='v'?[1080,1920]:[1920,1080];if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;}}
+const holeForClip=c=>{const hs=S.course.holes;return hs.find(h=>h.n==c.hole)||hs[S.hole]||hs[0];};
+const introLen=()=>S.template==='hole'&&!S.introOver?INTRO_T:0;
+function render(t,vt,vdur,h,useVideo){const W=cv.width,H=cv.height;cx.clearRect(0,0,W,H);
+  if(useVideo&&vid.readyState>=2&&vid.videoWidth){const s=Math.max(W/vid.videoWidth,H/vid.videoHeight),w=vid.videoWidth*s,hh=vid.videoHeight*s;cx.drawImage(vid,(W-w)/2,(H-hh)/2,w,hh);}
+  else bgPlaceholder(cx,W,H,t);
+  if(!h)return;
+  if(S.template==='hole')ovHole(cx,W,H,h,t,vt,vdur);else ovRound(cx,W,H,h,t,vt,vdur,S.template==='eighteen');}
+function staticPreview(){sizeCanvas();if(!S.course){render(0,0,6,null,false);txt(cx,'Elige un campo primero',cv.width/2,cv.height/2,{size:40,weight:700,align:'center'});return;}
+  const h=S.clips.length?holeForClip(S.clips[0]):cur();render(S.template==='hole'?2.2:3,4,6,h,false);}
+function loadClip(i){P.loading=true;const c=S.clips[i];return new Promise(res=>{
+  const done=()=>{vid.removeEventListener('loadeddata',done);P.loading=false;P.t0=performance.now();P.started=false;res();};
+  if(vid.src!==c.url){vid.src=c.url;vid.load();}else{try{vid.currentTime=0;}catch(e){}}
+  if(vid.readyState>=2){setTimeout(done,30);}else{vid.addEventListener('loadeddata',done);setTimeout(()=>{if(P.loading)done();},5000);}});}
+async function nextClip(){P.loading=true;P.i++;if(P.i>=S.clips.length){if(P.rec){finish();return;}P.i=0;}await loadClip(P.i);if(!introLen()){P.started=true;vid.play().catch(()=>{});}}
+function frame(now){if(!P.on)return;
+  const t=(now-P.t0)/1000,clip=S.clips[P.i],h=clip?holeForClip(clip):cur();let vt=0,vdur=6;
+  if(clip){if(!P.loading){if(!P.started&&t>=introLen()){P.started=true;vid.play().catch(()=>{});}
+      if(P.started){vt=vid.currentTime;vdur=isFinite(vid.duration)?vid.duration:6;if(vid.ended)nextClip();}}}
+  else{vt=Math.max(0,t-introLen());if(vt>vdur+.6){if(P.rec){finish();}else P.t0=now;}}
+  render(t,vt,vdur,h,!!clip);requestAnimationFrame(frame);}
+async function start(rec){
+  if(!S.course){$('#recStatus').textContent='Primero elige o crea un campo.';return;}
+  stop(true);sizeCanvas();ensureAudio();vid.muted=false;
+  if(S.clips.length){if(vid.src!==S.clips[0].url){vid.src=S.clips[0].url;}const p=vid.play();if(p)p.then(()=>{if(!P.started)vid.pause();}).catch(()=>{});}
+  P.on=true;P.i=0;P.started=false;
+  if(rec&&!startRec())return;
+  if(S.clips.length){await loadClip(0);vid.pause();try{vid.currentTime=0;}catch(e){}if(!introLen()){P.started=true;vid.play().catch(()=>{});}}
+  else P.t0=performance.now();
+  $('#recStatus').textContent=rec?'Grabando… no cambies de pestaña hasta que termine.':'';
+  requestAnimationFrame(frame);}
+function stop(silent){P.on=false;vid.pause();if(P.rec&&P.rec.state!=='inactive'){P.rec.stop();}if(!silent&&!P.rec)$('#recStatus').textContent='';}
+function finish(){P.on=false;vid.pause();if(P.rec&&P.rec.state!=='inactive')P.rec.stop();}
+function startRec(){
+  if(!cv.captureStream||!window.MediaRecorder){$('#recStatus').textContent='Este navegador no permite grabar el lienzo. Prueba con Chrome en Android o Safari 16+ en iPhone.';P.on=false;return false;}
+  const st=cv.captureStream(30);if(AD){const at=AD.stream.getAudioTracks()[0];if(at)st.addTrack(at);}
+  // H.264 primero (se ve en galería, WhatsApp, Windows, iPhone). Nunca "video/mp4" genérico en Chrome: mete VP9 y muchos reproductores no muestran imagen.
+  const isSafari=/^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent);
+  const types=['video/mp4;codecs=avc1.640028,mp4a.40.2','video/mp4;codecs=avc1.4D0028,mp4a.40.2','video/mp4;codecs=avc1.42E01F,mp4a.40.2',
+    'video/mp4;codecs=avc1,mp4a.40.2','video/mp4;codecs=avc1.640028,opus','video/mp4;codecs=avc1.640028','video/mp4;codecs=avc1',
+    ...(isSafari?['video/mp4']:[]),'video/webm;codecs=h264,opus','video/webm;codecs=vp8,opus','video/webm'];
+  const mt=types.find(t=>MediaRecorder.isTypeSupported(t))||'';
+  P.mime=mt;
+  try{P.rec=new MediaRecorder(st,mt?{mimeType:mt,videoBitsPerSecond:8e6}:{});}catch(e){$('#recStatus').textContent='No se pudo iniciar la grabación: '+e.message;P.on=false;return false;}
+  P.chunks=[];P.rec.ondataavailable=e=>{if(e.data&&e.data.size)P.chunks.push(e.data);};
+  P.rec.onstop=()=>{const type=P.rec.mimeType||mt||'video/webm',blob=new Blob(P.chunks,{type}),url=URL.createObjectURL(blob),ext=type.includes('mp4')?'mp4':'webm';
+    const h=S.clips.length?holeForClip(S.clips[0]):cur(),name='golf-'+(S.template==='hole'?'hoyo-'+h.n:S.template==='nine'?'9-hoyos':'18-hoyos')+'.'+ext;
+    $('#recOut').innerHTML=`<video controls playsinline src="${url}"></video><div class="row"><button class="btn gold" id="dlVid">⬇ Descargar ${ext.toUpperCase()}</button></div>`;
+    $('#dlVid').onclick=()=>saveFile(name,blob);
+    const h264=/avc1|h264/.test(P.mime)||(isSafari&&P.mime==='video/mp4');
+    $('#recStatus').textContent='Video listo ('+(blob.size/1048576).toFixed(1)+' MB, '+(h264?'H.264':'formato '+(P.mime||'por defecto'))+').'+
+      (h264?'':' Este navegador no graba en H.264: si tu reproductor no muestra imagen, ábrelo con VLC o usa Chrome actualizado.');P.rec=null;};
+  P.rec.start(500);return true;}
+
+/* ---------- UI: pestañas ---------- */
+function switchTab(n){document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===n));
+  document.querySelectorAll('.tab').forEach(s=>s.classList.toggle('on',s.id==='tab-'+n));
+  if(n==='video'){if(!P.on)staticPreview();}else if(P.on&&!P.rec)stop();
+  if(n==='hoyos')drawEmap();}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+
+/* ---------- UI: campo ---------- */
+$('#btnNear').onclick=searchNear;$('#btnIdx').onclick=()=>refreshIndex();$('#filter').oninput=()=>{if(!INDEX&&$('#filter').value.length===1)refreshIndex();showResults();};
+$('#results').onclick=e=>{const b=e.target.closest('.item');if(b)loadOsm(INDEX.list[+b.dataset.i]);};
+$('#btnDemo').onclick=()=>{setCourse(demoCourse());status('Campo demo cargado (datos de ejemplo).');};
+$('#btnManual').onclick=()=>$('#manualForm').classList.toggle('hidden');
+$('#mCreate').onclick=()=>{setCourse(manualCourse($('#mName').value.trim(),+$('#mHoles').value));};
+$('#btnAll').onclick=downloadAll;
+$('#saved').onclick=async e=>{const a=e.target.dataset.a;if(!a)return;const k=e.target.closest('.clip').dataset.k,c=COURSES.find(x=>x.key===k);if(!c)return;
+  if(a==='open'){setCourse(c);}
+  else if(a==='del'){if(e.target.textContent!=='¿Borrar?'){e.target.textContent='¿Borrar?';setTimeout(()=>{e.target.textContent='✕'},3000);return;}
+    await store.del(k);if(S.course&&S.course.key===k){S.course=null;save();refreshHeader();renderHoles();}await reloadCourses();}};
+$('#btnExport').onclick=async()=>{if(!COURSES.length){$('#bulkStatus').textContent='No hay campos para exportar.';return;}
+  const ok=await saveFile('campos-golf-studio.json',JSON.stringify({app:'golf-studio',v:1,exported:Date.now(),courses:COURSES}));
+  $('#bulkStatus').textContent=ok?COURSES.length+' campos exportados. Comparte el archivo y la otra persona lo importa para usarlos sin internet.':'';};
+$('#impIn').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+  try{const d=JSON.parse(await f.text()),list=(d.courses||[d]).filter(c=>c&&c.name&&Array.isArray(c.holes)&&c.holes.every(h=>h.geo&&h.tees));
+    for(const c of list){if(!c.key)c.key='manual/'+Date.now()+Math.random();await store.put(c);}
+    await reloadCourses();$('#bulkStatus').textContent=list.length+' campos importados.';}catch(err){$('#bulkStatus').textContent='Ese archivo no es un paquete de campos válido.';}};
+
+/* ---------- UI: hoyos ---------- */
+let EF=null;
+function renderHoles(){
+  if(!S.course){$('#holeChips').innerHTML='';$('#holeEditor').innerHTML='<div class="card"><p>Primero elige o crea un campo en la pestaña 1.</p></div>';return;}
+  $('#holeChips').innerHTML=S.course.holes.map((h,i)=>`<button class="chip ${i===S.hole?'on':''}" data-i="${i}">${h.n}</button>`).join('');
+  const h=cur(),hz=hazardsOf(h,h.teeSel),geoRef=!!S.course.ref;
+  $('#holeEditor').innerHTML=`
+  <div class="card">
+    <h2>Hoyo ${h.n}</h2>
+    <div class="grid3">
+      <label>Par<select id="eP">${[3,4,5,6].map(p=>`<option ${p==h.par?'selected':''}>${p}</option>`).join('')}</select></label>
+      <label>Ventaja<input id="eH" type="number" min="1" max="18" value="${esc(h.hcp)}"></label>
+      <label>Golpes<input id="eS" type="number" min="1" max="15" value="${esc(h.strokes??'')}"></label>
+    </div>
+    <h3 style="margin-top:14px">Tees de salida</h3>
+    <p class="muted">El círculo marca el tee desde el que se miden las distancias en el video.</p>
+    <div id="tees">${h.tees.map((t,i)=>`<div class="tee" data-i="${i}"><input type="radio" name="ts" ${i==h.teeSel?'checked':''} data-k="sel"><input type="color" value="${esc(t.color)}" data-k="color"><input value="${esc(t.name)}" data-k="name"><input type="number" value="${esc(t.yards)}" data-k="yards"><span class="muted">yd</span><button class="btn sm" data-k="del">✕</button></div>`).join('')}</div>
+    <button id="addTee" class="btn sm">＋ Tee</button>
+  </div>
+  <div class="card">
+    <h3>Forma y seguimiento del hoyo</h3>
+    ${h.auto?`<label>Forma (dibujo generado)<select id="eShape">${[['recto','Recto'],['izq','Dogleg izquierda'],['der','Dogleg derecha'],['s','Doble quiebre']].map(([v,l])=>`<option value="${v}" ${v===h.shape?'selected':''}>${l}</option>`).join('')}</select></label>`:'<p class="muted">Forma real tomada de OpenStreetMap.</p>'}
+    <canvas id="emap" width="900" height="1100" class="${S.mark?'marking':''}" style="margin-top:10px"></canvas>
+    <div class="row">
+      <button id="mk" class="btn ${S.mark?'gold':''}">${S.mark?'✓ Tocando el mapa marcas golpes':'✍ Marcar golpes en el mapa'}</button>
+      <button id="undo" class="btn sm">Deshacer</button><button id="clr" class="btn sm">Borrar</button>
+      <button id="gps" class="btn sm" ${geoRef?'':'disabled title="Solo en campos cargados de OpenStreetMap"'}>📍 Golpe aquí (GPS)</button>
+    </div>
+    <div id="shotList">${shotListHTML(h)}</div>
+    <p class="note">"Seg." es el segundo del video en que pegas ese golpe; si lo dejas vacío, los golpes aparecen repartidos a lo largo del video.</p>
+  </div>
+  <div class="card">
+    <h3>Trampas y azares</h3>
+    ${h.auto?`<div id="hzEdit">${h.hazards.map((z,i)=>`<div class="hz" data-i="${i}"><select data-k="type"><option value="bunker" ${z.type==='bunker'?'selected':''}>Bunker</option><option value="agua" ${z.type==='agua'?'selected':''}>Agua</option></select><select data-k="side">${['L','C','R'].map(s=>`<option value="${s}" ${z.side===s?'selected':''}>${SIDE[s]}</option>`).join('')}</select><input type="number" data-k="yd" value="${esc(z.yd)}" placeholder="yd"><button class="btn sm" data-k="del">✕</button></div>`).join('')}</div>
+    <button id="addHz" class="btn sm">＋ Trampa</button><p class="note">Distancia en yardas desde el tee más largo hasta el inicio de la trampa.</p>`:''}
+    <div style="margin-top:8px"><b style="font-size:13px">Desde tees ${esc(teeName(h).toLowerCase())}:</b>
+    ${hz.length?hz.map(z=>`<div class="hzinfo">${z.type==='agua'?'💧 Agua':'⛱ Bunker'} ${SIDE[z.side]} — <b>${z.near} yd</b> <span>(pasa a ${z.far} yd)</span></div>`).join(''):'<div class="hzinfo"><span>Sin trampas registradas</span></div>'}</div>
+  </div>`;
+  wireHole();drawEmap();
+}
+function shotListHTML(h){const T=teePos(h,h.teeSel),G=greenC(h),pts=[T,...h.shots.map(s=>[s.x,s.y])];
+  if(!h.shots.length)return '<p class="muted">Aún no hay golpes. Activa "Marcar golpes" y toca dónde cayó cada tiro.</p>';
+  return h.shots.map((s,i)=>{const d=Math.round(dist(pts[i],pts[i+1])*YD),r=Math.round(dist(pts[i+1],G)*YD);
+    return `<div class="shot" data-i="${i}"><span><b>Golpe ${i+1}</b> · ${d} yd · ${r<=8?'en green':'quedan '+r+' yd'}</span><input type="number" step="0.1" placeholder="Seg." value="${esc(s.t)}" data-k="t"></div>`;}).join('');}
+function drawEmap(){const c=document.getElementById('emap');if(!c||!cur())return;const x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);
+  EF=drawHole(x,cur(),0,0,c.width,c.height,{u:1.15,labels:true,markers:true,shots:true,shotLabels:true,fs:24});}
+function changed(regen){const h=cur();if(regen&&h.auto)genGeo(h);save();renderHoles();}
+function wireHole(){const h=cur();
+  $('#holeChips').onclick=e=>{const b=e.target.closest('.chip');if(b){S.hole=+b.dataset.i;save();renderHoles();}};
+  $('#eP').onchange=e=>{h.par=+e.target.value;changed(true);};
+  $('#eH').onchange=e=>{h.hcp=e.target.value?+e.target.value:'';changed();};
+  $('#eS').onchange=e=>{h.strokes=e.target.value?+e.target.value:null;changed();};
+  $('#tees').onchange=e=>{const row=e.target.closest('.tee'),i=+row.dataset.i,k=e.target.dataset.k;
+    if(k==='sel')h.teeSel=i;else if(k==='yards')h.tees[i].yards=+e.target.value||0;else h.tees[i][k]=e.target.value;changed(k==='yards');};
+  $('#tees').onclick=e=>{if(e.target.dataset.k!=='del')return;const i=+e.target.closest('.tee').dataset.i;if(h.tees.length<2)return;
+    h.tees.splice(i,1);if(h.geo.teesPos)h.geo.teesPos.splice(i,1);h.teeSel=Math.min(h.teeSel,h.tees.length-1);changed(true);};
+  $('#addTee').onclick=()=>{h.tees.push({name:'Nuevo',color:'#f2c230',yards:Math.max(50,(h.tees[h.tees.length-1]?.yards||300)-20)});if(!h.auto)h.geo.teesPos.push(h.geo.line[0]);changed(true);};
+  if($('#eShape'))$('#eShape').onchange=e=>{h.shape=e.target.value;h.shots=[];changed(true);};
+  if($('#hzEdit')){$('#hzEdit').onchange=e=>{const i=+e.target.closest('.hz').dataset.i,k=e.target.dataset.k;h.hazards[i][k]=k==='yd'?+e.target.value:e.target.value;changed(true);};
+    $('#hzEdit').onclick=e=>{if(e.target.dataset.k!=='del')return;h.hazards.splice(+e.target.closest('.hz').dataset.i,1);changed(true);};
+    $('#addHz').onclick=()=>{h.hazards.push({type:'bunker',side:'R',yd:Math.round((h.tees[0]?.yards||300)*.6)});changed(true);};}
+  $('#mk').onclick=()=>{S.mark=!S.mark;renderHoles();};
+  $('#undo').onclick=()=>{h.shots.pop();changed();};
+  $('#clr').onclick=()=>{h.shots=[];changed();};
+  $('#gps').onclick=()=>{if(!S.course.ref||!navigator.geolocation)return;navigator.geolocation.getCurrentPosition(p=>{const{lat0,lon0}=S.course.ref,k=Math.cos(lat0*Math.PI/180);
+      h.shots.push({x:(p.coords.longitude-lon0)*111320*k,y:(p.coords.latitude-lat0)*110574,t:''});changed();},()=>alertBox('No se pudo leer el GPS en esta vista.'),{enableHighAccuracy:true,timeout:15000});};
+  $('#shotList').onchange=e=>{const r=e.target.closest('.shot');if(r){h.shots[+r.dataset.i].t=e.target.value;save();}};
+  const em=$('#emap');em.onclick=e=>{if(!S.mark||!EF)return;const rc=em.getBoundingClientRect(),sx=(e.clientX-rc.left)*em.width/rc.width,sy=(e.clientY-rc.top)*em.height/rc.height;
+    const p=EF.inv(sx,sy);h.shots.push({x:p[0],y:p[1],t:''});changed();};
+}
+function alertBox(m){const el=document.createElement('div');el.className='status err';el.textContent=m;$('#shotList').prepend(el);setTimeout(()=>el.remove(),4000);}
+
+/* ---------- UI: video ---------- */
+function segSet(id,val){document.querySelectorAll('#'+id+' button').forEach(b=>b.classList.toggle('on',b.dataset.v===val));}
+$('#segTpl').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.template=b.dataset.v;segSet('segTpl',S.template);save();if(!P.on)staticPreview();};
+$('#segFmt').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.format=b.dataset.v;segSet('segFmt',S.format);save();if(!P.on)staticPreview();};
+$('#introOver').onchange=e=>{S.introOver=e.target.checked;save();};
+$('#fileIn').onchange=e=>{const hs=S.course?S.course.holes:[];let base=cur()?cur().n:1;
+  for(const f of e.target.files){S.clips.push({url:URL.createObjectURL(f),name:f.name,hole:base});if(hs.length&&S.template!=='hole')base=Math.min(base+1,hs[hs.length-1].n);}
+  e.target.value='';renderClips();staticPreview();};
+function renderClips(){const hs=S.course?S.course.holes:[];
+  $('#clips').innerHTML=S.clips.map((c,i)=>`<div class="clip" data-i="${i}"><span class="nm">🎬 ${esc(c.name)}</span><select data-k="hole">${hs.map(h=>`<option value="${h.n}" ${h.n==c.hole?'selected':''}>Hoyo ${h.n}</option>`).join('')}</select><button class="btn sm" data-k="up">↑</button><button class="btn sm" data-k="del">✕</button></div>`).join('')||'<p class="muted">Sin videos todavía. Sin video igual puedes ver la vista previa de la plantilla.</p>';}
+$('#clips').onchange=e=>{const r=e.target.closest('.clip');if(r){S.clips[+r.dataset.i].hole=+e.target.value;staticPreview();}};
+$('#clips').onclick=e=>{const k=e.target.dataset.k;if(!k||k==='hole')return;const i=+e.target.closest('.clip').dataset.i;
+  if(k==='del'){URL.revokeObjectURL(S.clips[i].url);S.clips.splice(i,1);}else if(k==='up'&&i>0){[S.clips[i-1],S.clips[i]]=[S.clips[i],S.clips[i-1]];}renderClips();staticPreview();};
+$('#btnPlay').onclick=()=>start(false);
+$('#btnStop').onclick=()=>stop();
+$('#btnRec').onclick=()=>{$('#recOut').innerHTML='';start(true);};
+
+/* ---------- inicio ---------- */
+(async()=>{
+  loadState();loadIndex();segSet('segTpl',S.template);segSet('segFmt',S.format);$('#introOver').checked=S.introOver;
+  await store.init();await reloadCourses();
+  if(LS.course&&!LS.key){const c=LS.course;c.key=c.key||(c.source==='demo'?'demo':'manual/legacy');LS.key=c.key;await storePut(c);} // versión anterior
+  if(LS.key)S.course=COURSES.find(c=>c.key===LS.key)||null;
+  if(S.course)S.hole=Math.min(S.hole||0,S.course.holes.length-1);else S.hole=0;
+  refreshHeader();renderHoles();renderClips();updIdxInfo();
+  if(navigator.onLine!==false&&(!INDEX||Date.now()-INDEX.t>30*864e5))refreshIndex(true);
+  if(document.fonts&&document.fonts.load)Promise.all([document.fonts.load('800 40px "Playfair Display"'),document.fonts.load('700 20px Inter')]).then(()=>{drawEmap();if(!P.on)staticPreview();}).catch(()=>{});
+})();
+/* app instalable y sin conexión (solo cuando se abre desde su propio sitio https) */
+const NET=()=>{const el=$('#net');if(el)el.textContent=navigator.onLine===false?'● sin conexión':'';};
+addEventListener('online',NET);addEventListener('offline',NET);NET();
+try{if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')&&!/claude/.test(location.hostname))navigator.serviceWorker.register('sw.js').catch(()=>{});}catch(e){}
+const IOS=/iphone|ipad|ipod/i.test(navigator.userAgent),STANDALONE=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+if(IOS&&!STANDALONE&&location.protocol==='https:'&&!/claude/.test(location.hostname)){const b=$('#btnInstall');b.classList.remove('hidden');b.onclick=()=>status('En iPhone: abre esta página en Safari, toca el botón Compartir (cuadro con flecha) y elige "Agregar a inicio".');}
+let INSTALL=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();INSTALL=e;$('#btnInstall').classList.remove('hidden');});
+if(!IOS)$('#btnInstall').onclick=async()=>{if(!INSTALL)return;INSTALL.prompt();await INSTALL.userChoice.catch(()=>{});INSTALL=null;$('#btnInstall').classList.add('hidden');};
+</script>
+</body>
+</html>
